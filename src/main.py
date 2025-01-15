@@ -1,4 +1,4 @@
-from textnode import *
+from textnode import TextType, TextNode
 def main():
     test_enum = TextType.CODE
     test_node = TextNode("This is a text node", test_enum, "https://www.boot.dev")
