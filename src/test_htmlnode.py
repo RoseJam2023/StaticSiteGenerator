@@ -13,7 +13,7 @@ class TestHTMLNode(unittest.TestCase):
         
         testnode = HTMLNode("p", "This is the test node's text", testchildren, props={"href": "https://google.com"})
 
-        print(f"This is the result of test_create_node: {repr(testnode)}")
+        print(f"This is the result of HTMLNode test_create_node:\n {repr(testnode)}")
 
     def test_eq_noargs(self):
         node = HTMLNode()
@@ -71,8 +71,5 @@ class TestHTMLNode(unittest.TestCase):
 
     def test_props_to_html(self):
         node = HTMLNode(props={"href": "https://google.com", "target": "_blank", "test": "_test"})
-        print(f"This is the result of test_props_to_html: [{node.props_to_html()}]")
+        print(f"\nThis is the result of HTML Node test_props_to_html: [{node.props_to_html()}]")
 
-
-if __name__ == "__main__":
-    unittest.main()
