@@ -104,6 +104,10 @@ class LeafNode(HTMLNode):
 
 class ParentNode(HTMLNode):
     def __init__(self, tag, children: list, props: dict = None):
+
+        if children is None or len(children) == 0:
+            raise ValueError("ParentNode must have at least one child.")
+        
         super().__init__(tag=tag, children=children, props=props)
 
     def to_html(self):
@@ -111,10 +115,10 @@ class ParentNode(HTMLNode):
         html_string = f"<{self.tag}>"
 
         if self.tag is None:
-            raise ValueError("Missing tag")
+            raise ValueError("ParentNode must have at least one tag")
         
         if self.children is None or len(self.children) == 0:
-            raise ValueError("Missing children")
+            raise ValueError("ParentNode must have at least one child.")
 
         for child in self.children:
             html_string += child.to_html()
