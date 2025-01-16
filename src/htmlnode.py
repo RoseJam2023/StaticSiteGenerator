@@ -1,10 +1,10 @@
 class HTMLNode:
 
     left_and_right = ["h1", "h2", "h3", "h4", "h5", "h6", "p", "b", "i", "code", "li"]
-    self_closing = ["img"]
+    #self_closing = ["img"]
     container = ["ul", "ol"]
     block = ["blockquote"]
-    link = ["a"]
+    #link = ["a"]
 
 
     '''
@@ -54,9 +54,17 @@ class HTMLNode:
 class LeafNode(HTMLNode):
     def __init__(self, tag=None, value=None, props: dict =None):
         
+        # Accounts for nodes that are created with only a value eg. raw text
         if value is None and tag is not None and props is None:
             value = tag
             tag = None
+
+        # For image tags, ensure necessary attributes exist
+        if tag == "img":
+            if props is None or "src" not in props or "alt" not in props:
+                raise ValueError("Image nodes must have 'src' and 'alt' attributes")
+            # Treat `alt` as the value for consistency of args across different node types
+            value = props["alt"]
         
         if value is None:
             raise ValueError("LeafNode type requires a non-optional 'value' argument")
@@ -64,6 +72,7 @@ class LeafNode(HTMLNode):
         super().__init__(tag=tag, value=value, props=props)
     
     def to_html(self):
+        print(f"[DEBUG: LeafNode to_html] tag: {self.tag}, value: {self.value}, props: {self.props}")
         if self.value is None:
             raise ValueError
         
@@ -75,11 +84,15 @@ class LeafNode(HTMLNode):
                 if self.tag in HTMLNode.left_and_right:
                     return f"<{self.tag}>{self.value}</{self.tag}>"
                 
-                elif self.tag in HTMLNode.link and self.props is not None:
+                elif self.tag == "a" and self.props is not None:
                     props_keys = list(self.props.keys())
                     props_values = list(self.props.values())
 
                     return f'<a {props_keys[0]}="{props_values[0]}>{self.value}</a>'
+                
+                elif self.tag == "img":
+                    return f'<img src="{self.props["src"]}" alt="{self.value}">'
+
 
                 #elif self.tag in HTMLNode.container:
                 
@@ -94,6 +107,7 @@ class ParentNode(HTMLNode):
         super().__init__(tag=tag, children=children, props=props)
 
     def to_html(self):
+        print(f"[DEBUG: ParentNode to_html] tag: {self.tag}, children: {self.children}, props: {self.props}")
         html_string = f"<{self.tag}>"
 
         if self.tag is None:
