@@ -72,6 +72,8 @@ class LeafNode(HTMLNode):
                     props_values = list(self.props.values())
 
                     return f'<a {props_keys[0]}="{props_values[0]}>{self.value}</a>'
+
+                #elif self.tag in HTMLNode.container:
                 
                 else:
                     raise Exception("Unhandled case")
