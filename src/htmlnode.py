@@ -65,6 +65,10 @@ class LeafNode(HTMLNode):
                 raise ValueError("Image nodes must have 'src' and 'alt' attributes")
             # Treat `alt` as the value for consistency of args across different node types
             value = props["alt"]
+
+        if tag == "a":
+            if props is None or "href" not in props:
+                raise ValueError("Link nodes must have 'href' attribute")
         
         if value is None:
             raise ValueError("LeafNode type requires a non-optional 'value' argument")
