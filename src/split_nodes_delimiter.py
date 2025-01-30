@@ -38,7 +38,9 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
                     prior_node, delimited_node, end_node = node_creation_helper_function(end_node.text, first_index, second_index, key, delimiters[key])
 
-                    new_nodes.append(prior_node)
+                    if prior_node.text != "":
+                        new_nodes.append(prior_node)
+
                     new_nodes.append(delimited_node)
 
             if end_node.text != "":
