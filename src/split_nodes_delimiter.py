@@ -18,9 +18,9 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
         else:
         
-            first_complete = find_first_complete_delimiter(old_node.text)
+            '''first_complete = find_first_complete_delimiter(old_node.text)
             if first_complete != delimiter:
-                raise ValueError("Provided delimiter is not the first delimiter pair that exists in the text")
+                raise ValueError("Provided delimiter is not the first delimiter pair that exists in the text")'''
                 
             first_index, second_index = find_delimiter_helper_function(old_node.text, delimiter)
 
@@ -31,20 +31,13 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
             new_nodes.append(delimited_node)
 
-            for key in delimiters:
-
-                while key in end_node.text:
-                    first_index, second_index = find_delimiter_helper_function(end_node.text, key)
-
-                    prior_node, delimited_node, end_node = node_creation_helper_function(end_node.text, first_index, second_index, key, delimiters[key])
-
-                    if prior_node.text != "":
-                        new_nodes.append(prior_node)
-
-                    new_nodes.append(delimited_node)
-
             if end_node.text != "":
-                new_nodes.append(end_node)
+                if delimiter in end_node.text:
+                    additional_nodes = split_nodes_delimiter([end_node], delimiter, text_type)
+                    new_nodes.extend(additional_nodes)
+
+                else:
+                    new_nodes.append(end_node)
 
     return new_nodes
 

@@ -118,7 +118,9 @@ class TestSplit_Nodes_Delimiter(unittest.TestCase):
         text_node = TextNode("This is a text line with one **bold** word and one *italics* word.", TextType.TEXT)
         old_nodes = [text_node]
 
-        result = split_nodes_delimiter(old_nodes, "**", TextType.BOLD)
+        first_pass = split_nodes_delimiter(old_nodes, "**", TextType.BOLD)
+
+        result = split_nodes_delimiter(first_pass, "*", TextType.ITALIC)
 
         assert len(result) == 5, f"Should split into 5 nodes, but instead split into {len(result)}.\n Please review result nodes: [{result}]"
 
@@ -146,9 +148,11 @@ class TestSplit_Nodes_Delimiter(unittest.TestCase):
         text_node = TextNode("**This** is a text line with a bold delimiter at the front and an italics delimiter at the *end.*", TextType.TEXT)
         old_nodes = [text_node]
 
-        result = split_nodes_delimiter(old_nodes, "**", TextType.BOLD)
+        first_pass = split_nodes_delimiter(old_nodes, "**", TextType.BOLD)
 
-        assert len(result) == 3, f"Should split into 3 nodes, but instead split into [{len(result)}]"
+        result = split_nodes_delimiter(first_pass, "*", TextType.ITALIC)
+
+        assert len(result) == 3, f"Should split into 3 nodes, but instead split into [{len(result)}]. Please review the nodes: {result}"
 
         assert result[0].text == "This", f"result[0] should be 'This', but instead reads: [{result[0]}]"
         assert result[0].text_type == TextType.BOLD
@@ -179,17 +183,4 @@ class TestSplit_Nodes_Delimiter(unittest.TestCase):
             "Invalid delimiter chosen"
         )
 
-    def test_split_nodes_delimiter_delimiter_out_of_order(self):
-        with self.assertRaises(ValueError) as context:
-
-            text_node = TextNode("This is a text line with one **bold** word and one *italics* word.", TextType.TEXT)
-            old_nodes = [text_node]
-
-            result = split_nodes_delimiter(old_nodes, "*", TextType.ITALIC)
-
-            print(result)
-
-        self.assertEqual(
-            str(context.exception),
-            "Provided delimiter is not the first delimiter pair that exists in the text"
-        )
+    
